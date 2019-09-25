@@ -7,8 +7,8 @@ package com.poi.test;
  */
 public class Test4 {
 	public static void main(String[] args) {
-		String ss ="\"内容\"";
-		String name=ss.substring(ss.indexOf("\"")+1,ss.lastIndexOf("\""));
+		String ss ="C:/Users/thin/Desktop/桐和源周销售预估.xlsx";
+		String name=ss.substring(ss.lastIndexOf("/")+1);
 		System.out.println(name);
 	}
 }

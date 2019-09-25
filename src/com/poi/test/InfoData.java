@@ -52,8 +52,12 @@ public class InfoData {
 		Sheet sheet = workbookred.getSheetAt(0); // 获取工作簿
 		int firstrow = sheet.getFirstRowNum(); // 起始行 从0开始
 		int lastrow = sheet.getLastRowNum(); // 末行
-
-		FileOutputStream out = new FileOutputStream("C:/Users/thin/Desktop/新建表格.xlsx"); // 创建文件夹路径
+		
+		/**
+		 * 导出功能 创建excel表格并且将读取的内容写入进去
+		 */
+		String filename=filePath.substring(filePath.lastIndexOf("/")+1);			//获取读取excel表格的名称
+		FileOutputStream out = new FileOutputStream("C:/Users/thin/Desktop/"+filename+"-副本"); // 创建文件夹路径
 		HSSFWorkbook workbook = new HSSFWorkbook();// 创建Excel文件(Workbook)
 		HSSFSheet sheet1 = workbook.createSheet(); // 创建工作簿
 		// 循环输出
