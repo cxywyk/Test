@@ -33,81 +33,58 @@ public class InfoData {
 		/**
 		 * 创建Excel表格
 		 */
-		String filePath = "";// 文件路径
-		String prefix=filePath.substring(filePath.lastIndexOf('.')+1);	//获取文件路径的后缀
-//		FileOutputStream out = new FileOutputStream(filePath);
-//		HSSFWorkbook workbook = new HSSFWorkbook();// 创建Excel文件(Workbook)
-//		/**
-//		 * 创建Excel里面的内容
-//		 */
-//		HSSFSheet sheet1 = workbook.createSheet(); // 创建工作簿		
-//		HSSFSheet sheet12 = workbook.createSheet(); // 创建工作簿		
-//		HSSFRow row = sheet1.createRow(0);// 创建行,从0开始
-//		HSSFCell cell = row.createCell(0);// 创建行的单元格,也是从0开始
-//		cell.setCellValue("姓名");// 设置单元格内容
-//		row.createCell(1).setCellValue("年龄");// 设置单元格内容,重载
-//		row.createCell(2).setCellValue("手机号");// 设置单元格内容,重载
-//		row.createCell(3).setCellValue("性别");// 设置单元格内容,重载
-//		
-//		HSSFRow row1 = sheet1.createRow(1);// 创建行,从1开始
-//		HSSFCell cell1 = row1.createCell(0);// 创建行的单元格,也是从1开始
-//		cell1.setCellValue("wyk");// 设置单元格内容
-//		row1.createCell(1).setCellValue(24);// 设置单元格内容,重载
-//		row1.createCell(2).setCellValue(123456);// 设置单元格内容,重载
-//		row1.createCell(3).setCellValue("男");// 设置单元格内容,重载
-//		
-//		HSSFRow row12 = sheet1.createRow(2);// 创建行,从1开始
-//		HSSFCell cell12 = row12.createCell(0);// 创建行的单元格,也是从1开始
-//		cell12.setCellValue("w11yk");// 设置单元格内容
-//		row12.createCell(1).setCellValue(214);// 设置单元格内容,重载
-//		row12.createCell(2).setCellValue(1123456);// 设置单元格内容,重载
-//		row12.createCell(3).setCellValue("1男");// 设置单元格内容,重载
-//		/**
-//		 * 进行抒写
-//		 */
-//		workbook.write(out);// 保存Excel文件
-//		out.close();// 关闭文件流
+		String filePath = "C:/Users/thin/Desktop/桐和源周销售预估.xlsx";//读取文件路径
+		String prefix = filePath.substring(filePath.lastIndexOf('.') + 1); // 获取文件路径的后缀,下面判断是2003的还是2007的 
+		/**
+		 * 读取Excel表中的内容
+		 */
 		FileInputStream fileinput = new FileInputStream(filePath); // 读取内容
 		Workbook workbookred = null;
-		if(prefix.equals("xls"))
-		{
-			System.out.println("1");
-			workbookred=new HSSFWorkbook(fileinput); //2003版读取
+		if (prefix.equals("xls")) {
+			workbookred = new HSSFWorkbook(fileinput); // 2003版读取
+		} else if (prefix.equals("xlsx")) {
+			workbookred = new XSSFWorkbook(fileinput); // 2007版读取
 		}
-		else if(prefix.equals("xlsx"))
-		{
-			workbookred=new XSSFWorkbook(fileinput); //2007版读取
-		}
-		
+
 		/**
 		 * 获取指定excel的数据
 		 */
 		Sheet sheet = workbookred.getSheetAt(0); // 获取工作簿
-		int firstrow = sheet.getFirstRowNum(); // 起始行  从0开始
+		int firstrow = sheet.getFirstRowNum(); // 起始行 从0开始
 		int lastrow = sheet.getLastRowNum(); // 末行
-		//追加
 
+		FileOutputStream out = new FileOutputStream("C:/Users/thin/Desktop/新建表格.xlsx"); // 创建文件夹路径
+		HSSFWorkbook workbook = new HSSFWorkbook();// 创建Excel文件(Workbook)
+		HSSFSheet sheet1 = workbook.createSheet(); // 创建工作簿
 		// 循环输出
-		for (int i = firstrow+1; i <=lastrow; i++) {
+		for (int i = firstrow; i <= lastrow; i++) {
+			HSSFRow row12 = sheet1.createRow(i);// 创建行,从1开始
 			// 创建行对象
 			Row row2 = sheet.getRow(i);
 			// 判断行row2对象是否为空
 			if (row2 != null) {
 				int physicalNumberOfCells = row2.getPhysicalNumberOfCells(); // 获取总列数
-				short firstCellNum = row2.getFirstCellNum(); 	//第一行的第一个单元格 0起步
+				short firstCellNum = row2.getFirstCellNum(); // 第一行的第一个单元格 0起步
 				for (int j = firstCellNum; j < physicalNumberOfCells; j++) {
-					// 在获取单元格对象 row2.getCell(int cell)返回单元格对象
-					Cell cell2 = row2.getCell(j);
-					//Cannot get a STRING value from a NUMERIC cell 无法从numeric获取字符串值,进行修改一下类型即可
-					//进行更改表格类型
-					//cell2.setCellType(CellType.STRING);
-					//获取当前表格值的类型
-					//System.out.println(cell2.getCellTypeEnum());
-					// 进行表头
-					//System.out.println(cell2.getStringCellValue().toString());
+					Cell cell2 = row2.getCell(j); // 创建单元格对象
+					cell2.setCellType(CellType.STRING); // 进行更改表格类型
+					// 获取列的数据
+					if (cell2.getStringCellValue().indexOf("\"") >= 0) {
+						//判断 如果有数据 是带有双引号的 那么就进入判断截取双引号里面的内容
+						String name = cell2.getStringCellValue().substring(cell2.getStringCellValue().indexOf("\"") + 1,
+								cell2.getStringCellValue().lastIndexOf("\""));
+						row12.createCell(j).setCellValue(name);
+					} else {
+						//如果没有的话继续添加
+						row12.createCell(j).setCellValue(cell2.getStringCellValue().toString());
+					}
 				}
 			}
 		}
-
+		/**
+		 * 进行抒写
+		 */
+		workbook.write(out);// 保存Excel文件
+		out.close();// 关闭文件流
 	}
 }
