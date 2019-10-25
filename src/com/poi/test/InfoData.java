@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.poi.hpsf.DocumentSummaryInformation;
 import org.apache.poi.hpsf.SummaryInformation;
@@ -33,8 +35,8 @@ public class InfoData {
 		/**
 		 * 创建Excel表格
 		 */
-		String filePath = "C:/Users/thin/Desktop/桐和源周销售预估.xlsx";//读取文件路径
-		String prefix = filePath.substring(filePath.lastIndexOf('.') + 1); // 获取文件路径的后缀,下面判断是2003的还是2007的 
+		String filePath = "C:/Users/thin/Desktop/";// 读取文件路径
+		String prefix = filePath.substring(filePath.lastIndexOf('.') + 1); // 获取文件路径的后缀,下面判断是2003的还是2007的
 		/**
 		 * 读取Excel表中的内容
 		 */
@@ -52,12 +54,12 @@ public class InfoData {
 		Sheet sheet = workbookred.getSheetAt(0); // 获取工作簿
 		int firstrow = sheet.getFirstRowNum(); // 起始行 从0开始
 		int lastrow = sheet.getLastRowNum(); // 末行
-		
+
 		/**
 		 * 导出功能 创建excel表格并且将读取的内容写入进去
 		 */
-		String filename=filePath.substring(filePath.lastIndexOf("/")+1);			//获取读取excel表格的名称
-		FileOutputStream out = new FileOutputStream("C:/Users/thin/Desktop/"+filename+"-副本"); // 创建文件夹路径
+		String filename = filePath.substring(filePath.lastIndexOf("/") + 1); // 获取读取excel表格的名称
+		FileOutputStream out = new FileOutputStream("C:/Users/thin/Desktop/" + filename + "-副本"); // 创建文件夹路径
 		HSSFWorkbook workbook = new HSSFWorkbook();// 创建Excel文件(Workbook)
 		HSSFSheet sheet1 = workbook.createSheet(); // 创建工作簿
 		// 循环输出
@@ -74,12 +76,12 @@ public class InfoData {
 					cell2.setCellType(CellType.STRING); // 进行更改表格类型
 					// 获取列的数据
 					if (cell2.getStringCellValue().indexOf("\"") >= 0) {
-						//判断 如果有数据 是带有双引号的 那么就进入判断截取双引号里面的内容
+						// 判断 如果有数据 是带有双引号的 那么就进入判断截取双引号里面的内容
 						String name = cell2.getStringCellValue().substring(cell2.getStringCellValue().indexOf("\"") + 1,
 								cell2.getStringCellValue().lastIndexOf("\""));
 						row12.createCell(j).setCellValue(name);
 					} else {
-						//如果没有的话继续添加
+						// 如果没有的话继续添加
 						row12.createCell(j).setCellValue(cell2.getStringCellValue().toString());
 					}
 				}
